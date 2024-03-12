@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Members Form</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="step-indicator">
+        <span class="step-number active">1</span>
+        <span class="step-number">2</span>
+        <span class="step-number">3</span>
+      </div>
+      <form id="memberForm" class="member-form">
+        <div class="form-section" data-section="1">
+          <!-- <label for="imageInput">உங்கள் புகைப்படம்:</label> -->
+          <label id="imageLabel" for="imageInput">
+            <img id="profilePic" src="image.png" alt="Profile Picture" />
+          </label>
+          <input
+            type="file"
+            id="imageInput"
+            name="ImagePath"
+            onchange="uploadAndConvert()"
+            accept="image/*"
+            style="display: none" />
+
+          <label for="name">பெயர்:</label>
+          <input type="text" id="name" name="Name" required />
+
+          <label for="fatherName">தந்தையின் பெயர்:</label>
+          <input type="text" id="fatherName" name="FatherName" required />
+
+          <label for="dob">பிறந்த தேதி:</label>
+          <input type="date" id="dob" name="DOB" required />
+
+          <label for="whNumber">வாட்ஸ்அப் எண்:</label>
+          <input type="text" id="whNumber" name="WhNumber" required />
+
+          <button type="button" onclick="nextSection(1)">Next</button>
+        </div>
+
+        <div class="form-section" data-section="2" style="display: none">
+          <label for="district">மாவட்டம்:</label>
+          <select id="district" name="District" required></select>
+
+          <label for="division">தொகுதி:</label>
+          <input type="text" id="division" name="Division" />
+
+          <label for="ward">வார்டு:</label>
+          <input type="text" id="ward" name="Ward" />
+
+          <label for="postOffice">அஞ்சல் குறியிடு:</label>
+          <input type="text" id="postOffice" name="PostOffice" />
+
+          <label for="address">முகவரி:</label>
+          <textarea id="address" name="Address" rows="4" required></textarea>
+
+          <label for="areaType">பகுதி:</label>
+          <select id="areaType" name="AreaType" required>
+            <option value="Panchayat Union">ஊராச்சி ஒன்றியம்</option>
+            <option value="Municipality">பேரூராட்சி</option>
+            <option value="Corporation">மாநகராட்சி</option>
+            <option value="Civilization">நாகராட்சி</option>
+          </select>
+          <button type="button" onclick="prevSection(2)">Previous</button>
+          <button type="button" onclick="nextSection(2)">Next</button>
+        </div>
+
+        <div class="form-section" data-section="3" style="display: none">
+          <label for="voterId">வாக்காளர் அடையாள எண்:</label>
+          <input type="text" id="voterId" name="VoterId" />
+
+          <label for="bloodGroup">குருதி விவரம்:</label>
+          <input type="text" id="bloodGroup" name="BloodGroup" />
+
+          <label for="occupation">தொழில்:</label>
+          <input type="text" id="occupation" name="Occupation" />
+
+          <label for="directSupport">நேரடி ஆதரவு:</label>
+          <textarea id="directSupport" name="DirectSupport" rows="4"></textarea>
+
+          <label for="indirectSupport">மறைமுக ஆதரவு:</label>
+          <textarea
+            id="indirectSupport"
+            name="IndirectSupport"
+            rows="4"></textarea>
+
+          <button type="button" onclick="prevSection(3)">Previous</button>
+          <button type="submit" onclick="">Submit</button>
+        </div>
+      </form>
+    </div>
+    <div class="container1"></div>
+    <div class="notification-container" id="notificationContainer">
+      <div class="notification success" id="successNotification">
+        <span class="message">Success! Your action was completed.</span>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

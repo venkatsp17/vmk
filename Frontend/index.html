@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Members Form</title>
+  </head>
+  <body>
+    <div class="container">
+      <form id="memberForm" class="member-form">
+        <label for="name">பெயர்:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="fatherName">தந்தையின் பெயர்:</label>
+        <input type="text" id="fatherName" name="fatherName" required />
+
+        <label for="dob">பிறந்த தேதி:</label>
+        <input type="date" id="dob" name="dob" required />
+
+        <label for="whNumber">வாட்ஸ்அப் எண்:</label>
+        <input type="text" id="whNumber" name="whNumber" required />
+
+        <label for="district">மாவட்டம்:</label>
+        <input type="text" id="district" name="district" required />
+
+        <label for="division">தொகுதி:</label>
+        <input type="text" id="division" name="division" />
+
+        <label for="ward">வார்டு:</label>
+        <input type="text" id="ward" name="ward" />
+
+        <label for="postOffice">அஞ்சல் குறியிடு:</label>
+        <input type="text" id="postOffice" name="postOffice" />
+
+        <label for="address">முகவரி:</label>
+        <textarea id="address" name="address" rows="4" required></textarea>
+
+        <label for="areaType">பகுதி:</label>
+        <select id="areaType" name="areaType" required>
+          <option value="Panchayat Union">ஊராச்சி ஒன்றியம்</option>
+          <option value="Municipality">பேரூராட்சி</option>
+          <option value="Corporation">மாநகராட்சி</option>
+          <option value="Civilization">நாகராட்சி</option>
+        </select>
+
+        <label for="voterId">வாக்காளர் அடையாள எண்:</label>
+        <input type="text" id="voterId" name="voterId" />
+
+        <label for="bloodGroup">குருதி விவரம்:</label>
+        <input type="text" id="bloodGroup" name="bloodGroup" />
+
+        <label for="occupation">தொழில்:</label>
+        <input type="text" id="occupation" name="occupation" />
+
+        <label for="directSupport">நேரடி ஆதரவு:</label>
+        <textarea id="directSupport" name="directSupport" rows="4"></textarea>
+
+        <label for="indirectSupport">மறைமுக ஆதரவு:</label>
+        <textarea
+          id="indirectSupport"
+          name="indirectSupport"
+          rows="4"></textarea>
+        <!-- <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" />
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" /> -->
+        <!-- <label for="imagePath">Image Path:</label>
+        <input type="text" id="imagePath" name="imagePath" /> -->
+        <button type="submit" onclick="submitForm(event)">Submit</button>
+      </form>
+    </div>
+   
+    <script src="script.js"></script>
+  </body>
+</html>

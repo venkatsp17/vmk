@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Table</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>உறுப்பினர் அட்டவணை</h1>
+      <button id="openMapBtn">வரைபடம்</button>
+      <button id="backButton" style="display: none">Back</button>
+    </header>
+    <div id="tableContainer">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>அடையாள எண்</th>
+            <th>பெயர்</th>
+            <th>தந்தையின் பெயர்</th>
+            <th>பிறந்த தேதி</th>
+            <th>வாட்ஸ்அப் எண்:</th>
+            <th>மாவட்டம்:</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Table data will be inserted here dynamically -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7" id="pagination">
+              <button id="prevPageBtn" onclick="prevPage()">
+                Previous Page
+              </button>
+              <span id="currentPage">Page 1</span>
+              <button id="nextPageBtn" onclick="nextPage()">Next Page</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div id="map" style="display: none"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
