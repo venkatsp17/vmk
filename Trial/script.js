@@ -41,7 +41,6 @@ getLocation();
 
 function updateStepIndicator() {
   const stepNumbers = document.querySelectorAll(".step-number");
-
   stepNumbers.forEach((step, index) => {
     if (index + 1 === currentSection) {
       step.classList.add("active");
@@ -120,59 +119,76 @@ document
   .getElementById("memberForm")
   .addEventListener("submit", function (event) {
     event.preventDefault();
-    const formData = new FormData(document.getElementById("memberForm"));
+    signInWithPhoneNumber()
+      .then(() => {
+        const formData = new FormData(document.getElementById("memberForm"));
 
-    // Convert FormData to JSON
-    const jsonData = {};
-    formData.forEach((value, key) => {
-      jsonData[key] = value;
-    });
-    jsonData["Latitude"] = Lat;
-    jsonData["Longitude"] = Lon;
-    jsonData["ImagePath"] = Imgstr;
-    console.log(jsonData);
-    showSuccessNotification();
-    setTimeout(() => {
-      document.getElementsByClassName("container")[0].style.display = "none";
-      document.getElementsByClassName("container1")[0].style.display = "block";
-      var textnode = document.createTextNode("Link1");
-      var anchornode = document.createElement("a");
-      anchornode.appendChild(textnode);
-      anchornode.style.display = "flex";
-      anchornode.style.height = "inherit";
-      anchornode.style.justifyContent = "center";
-      anchornode.style.alignItems = "center";
-      anchornode.href = "Link1";
-      anchornode.title = "Link1";
-      document.getElementsByClassName("container1")[0].appendChild(anchornode);
-    }, 3000);
+        // Convert FormData to JSON
+        const jsonData = {};
+        formData.forEach((value, key) => {
+          jsonData[key] = value;
+        });
+        jsonData["Latitude"] = Lat;
+        jsonData["Longitude"] = Lon;
+        jsonData["ImagePath"] = Imgstr;
+        console.log(jsonData);
+        showSuccessNotification();
+        setTimeout(() => {
+          document.getElementsByClassName("container")[0].style.display =
+            "none";
+          document.getElementsByClassName("container1")[0].style.display =
+            "block";
+          var textnode = document.createTextNode(
+            "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa"
+          );
+          var anchornode = document.createElement("a");
+          anchornode.appendChild(textnode);
+          anchornode.style.display = "flex";
+          anchornode.style.height = "inherit";
+          anchornode.style.justifyContent = "center";
+          anchornode.style.alignItems = "center";
+          anchornode.href = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
+          anchornode.title = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
+          document
+            .getElementsByClassName("container1")[0]
+            .appendChild(anchornode);
+        }, 3000);
 
-    // Make a POST request using Fetch API
-    // fetch("http://localhost:3000/submitForm", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(jsonData),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     console.log("Success:", data);
-    //     showSuccessNotification();
-    //     setTimeout(() => {}, 3000);
-    //     document.getElementsByClassName("container").style.display = "none";
-    //     document.getElementsByClassName("container1").style.display = "block";
-    //     // Optionally, you can redirect or display a success message here
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //     // Handle error, display an error message, etc.
-    //   });
+        // Make a POST request using Fetch API
+        fetch("http://localhost:3000/submitForm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jsonData),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Success:", data);
+            showSuccessNotification();
+            setTimeout(() => {}, 3000);
+            document.getElementsByClassName("container").style.display = "none";
+            document.getElementsByClassName("container1").style.display =
+              "block";
+            document.getElementById("recaptcha-container").style.display =
+              "none";
+            // Optionally, you can redirect or display a success message here
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            // Handle error, display an error message, etc.
+          });
+      })
+      .catch((error) => {
+        // Handle any errors during phone number verification
+        // ...
+        console.log("Error:", error);
+      });
   });
 
 updateStepIndicator();
@@ -300,3 +316,5 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 });
+
+// const phoneNumber = document.getElementById("whNumber").value;

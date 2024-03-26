@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
     <title>Members Form</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-auth-compat.js"></script>
   </head>
   <body>
     <div class="container">
@@ -99,6 +101,59 @@
         <span class="message">Success! Your action was completed.</span>
       </div>
     </div>
+    <div id="recaptcha-container"></div>
+    <script>
+      // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyAncEcCrnUyQurlkB8yFf0450vlw7-vE0g",
+        authDomain: "vmk-tvl.firebaseapp.com",
+        projectId: "vmk-tvl",
+        storageBucket: "vmk-tvl.appspot.com",
+        messagingSenderId: "235904375981",
+        appId: "1:235904375981:web:9267a36a3e19e1a4ec3a24",
+      };
+      const app = firebase.initializeApp(firebaseConfig);
+      function signInWithPhoneNumber() {
+        return new Promise((resolve, reject) => {
+          var phoneNumber = "+91" + document.getElementById("whNumber").value;
+          document.getElementsByClassName("container")[0].style.display =
+            "none";
+          var recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "recaptcha-container",
+            {
+              size: "invisible",
+            }
+          );
+
+          firebase
+            .auth()
+            .signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+            .then((confirmationResult) => {
+              // SMS sent successfully
+              var code = prompt(
+                "Enter the verification code sent to your phone:"
+              );
+              confirmationResult
+                .confirm(code)
+                .then((result) => {
+                  // User signed in successfully
+                  console.log("OTP verified", result.user);
+                  resolve();
+                })
+                .catch((error) => {
+                  // Error occurred
+                  console.error("Error signing in:", error);
+                  reject(error);
+                });
+            })
+            .catch((error) => {
+              // Error occurred during signInWithPhoneNumber
+              console.error("Error signing in with phone number:", error);
+              reject(error); // Reject the promise
+            });
+        });
+      }
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
