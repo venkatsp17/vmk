@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./style.css" />
     <title>Members Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-auth-compat.js"></script>
   </head>
   <body>
+    <div class="container2"></div>
     <div class="container">
       <div class="step-indicator">
         <span class="step-number active">1</span>
@@ -37,6 +42,12 @@
 
           <label for="dob">பிறந்த தேதி:</label>
           <input type="date" id="dob" name="DOB" required />
+
+          <label for="booth">தேர்தல் சாவடி எண்:</label>
+          <input type="number" id="booth" name="BoothNumber" />
+
+          <label for="boothaddress">தேர்தல் சாவடி முகவரி:</label>
+          <input type="text" id="boothaddress" name="BoothAddress" />
 
           <label for="whNumber">வாட்ஸ்அப் எண்:</label>
           <input type="text" id="whNumber" name="WhNumber" required />
@@ -78,20 +89,93 @@
           <label for="bloodGroup">குருதி விவரம்:</label>
           <input type="text" id="bloodGroup" name="BloodGroup" />
 
-          <label for="occupation">தொழில்:</label>
-          <input type="text" id="occupation" name="Occupation" />
+          <label for="refid">பரிந்துரைப்பவர் வாக்காளர் அடையாள எண்:</label>
+          <input type="text" id="refid" name="RefId" />
+          <button class="verify-btn" id="ver-btn">
+            Verify
+          </button>
+          <p class="responsetext" style="margin: 5px"></p>
+          <!-- <label for="occupation">தொழில்:</label>
+          <input type="text" id="occupation" name="Occupation" /> -->
 
+          <!-- <label for="directSupport">நேரடி ஆதரவு:</label>
+          <textarea id="directSupport" name="DirectSupport" rows="4"></textarea> -->
           <label for="directSupport">நேரடி ஆதரவு:</label>
-          <textarea id="directSupport" name="DirectSupport" rows="4"></textarea>
-
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="directSupport1"
+              name="DirectSupport"
+              value="Public relations" />
+            <label for="directSupport1">மக்கள் தொடர்பு</label>
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="directSupport2"
+              name="DirectSupport"
+              value="Field work" />
+            <label for="directSupport2">களப்பணி</label>
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="directSupport3"
+              name="DirectSupport"
+              value="Financial management" />
+            <label for="directSupport3">நிதி மேலாண்மை</label>
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="directSupport4"
+              name="DirectSupport"
+              value="Event management" />
+            <label for="directSupport4">நிகழ்ச்சி ஏற்பட்டு மேலாண்ம</label>
+          </div>
           <label for="indirectSupport">மறைமுக ஆதரவு:</label>
-          <textarea
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="indirectSupport1"
+              name="IndirectSupport"
+              value="Banner/scroll design" />
+            <label for="indirectSupport1">பதாகை/சுருட்டி வடிவமைப்பு</label>
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="indirectSupport2"
+              name="IndirectSupport"
+              value="Video creation" />
+            <label for="indirectSupport2">காணொளி உருவாக்குதல்</label>
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="indirectSupport3"
+              name="IndirectSupport"
+              value="Party propaganda on social media" />
+            <label for="indirectSupport3"
+              >சமூக வலைதளத்தில் கட்சிப் பரப்புர</label
+            >
+          </div>
+          <div style="display: flex; align-items: center; margin: 0">
+            <input
+              type="radio"
+              id="indirectSupport4"
+              name="IndirectSupport"
+              value="Content writing" />
+            <label for="indirectSupport4">உள்ளடக்கம் எழுதுதல்</label>
+          </div>
+          <!-- <textarea
             id="indirectSupport"
             name="IndirectSupport"
-            rows="4"></textarea>
-
+            rows="4"></textarea> -->
           <button type="button" onclick="prevSection(3)">Previous</button>
-          <button type="submit" onclick="">Submit</button>
+          <button class="submitbtn" id="sub-btn">
+            Submit
+          </button>
         </div>
       </form>
     </div>
@@ -102,58 +186,6 @@
       </div>
     </div>
     <div id="recaptcha-container"></div>
-    <script>
-      // import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-      const firebaseConfig = {
-        apiKey: "AIzaSyAncEcCrnUyQurlkB8yFf0450vlw7-vE0g",
-        authDomain: "vmk-tvl.firebaseapp.com",
-        projectId: "vmk-tvl",
-        storageBucket: "vmk-tvl.appspot.com",
-        messagingSenderId: "235904375981",
-        appId: "1:235904375981:web:9267a36a3e19e1a4ec3a24",
-      };
-      const app = firebase.initializeApp(firebaseConfig);
-      function signInWithPhoneNumber() {
-        return new Promise((resolve, reject) => {
-          var phoneNumber = "+91" + document.getElementById("whNumber").value;
-          document.getElementsByClassName("container")[0].style.display =
-            "none";
-          var recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-            "recaptcha-container",
-            {
-              size: "invisible",
-            }
-          );
-
-          firebase
-            .auth()
-            .signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
-            .then((confirmationResult) => {
-              // SMS sent successfully
-              var code = prompt(
-                "Enter the verification code sent to your phone:"
-              );
-              confirmationResult
-                .confirm(code)
-                .then((result) => {
-                  // User signed in successfully
-                  console.log("OTP verified", result.user);
-                  resolve();
-                })
-                .catch((error) => {
-                  // Error occurred
-                  console.error("Error signing in:", error);
-                  reject(error);
-                });
-            })
-            .catch((error) => {
-              // Error occurred during signInWithPhoneNumber
-              console.error("Error signing in with phone number:", error);
-              reject(error); // Reject the promise
-            });
-        });
-      }
-    </script>
     <script src="script.js"></script>
   </body>
 </html>

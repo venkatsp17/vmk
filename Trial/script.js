@@ -2,6 +2,7 @@ let currentSection = 1;
 var Lat;
 var Lon;
 var Imgstr;
+window.jsPDF = window.jspdf.jsPDF;
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -11,10 +12,13 @@ function getLocation() {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Success Notificaiton
+////////////////////////////////////////////////////////////////////////////////////////
+
 const notificationContainer = document.getElementById("notificationContainer");
 const successNotification = document.getElementById("successNotification");
 
-// Show the success notification
 function showSuccessNotification() {
   successNotification.style.display = "block";
 
@@ -23,6 +27,10 @@ function showSuccessNotification() {
     successNotification.style.display = "none";
   }, 3000);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Lat & Long
+////////////////////////////////////////////////////////////////////////////////////////
 
 function showPosition(position) {
   //   x.innerHTML =
@@ -38,6 +46,10 @@ function showPosition(position) {
   //   console.log(position.coords.longitude);
 }
 getLocation();
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Step Indicators
+////////////////////////////////////////////////////////////////////////////////////////
 
 function updateStepIndicator() {
   const stepNumbers = document.querySelectorAll(".step-number");
@@ -55,17 +67,17 @@ function nextSection(section) {
     `.form-section[data-section="${section}"]`
   );
 
-  if (validateCurrentSection(section)) {
-    const nextSectionDiv = document.querySelector(
-      `.form-section[data-section="${section + 1}"]`
-    );
-    if (nextSectionDiv) {
-      currentSectionDiv.style.display = "none";
-      nextSectionDiv.style.display = "block";
-      currentSection = section + 1;
-      updateStepIndicator();
-    }
+  // if (validateCurrentSection(section)) {
+  const nextSectionDiv = document.querySelector(
+    `.form-section[data-section="${section + 1}"]`
+  );
+  if (nextSectionDiv) {
+    currentSectionDiv.style.display = "none";
+    nextSectionDiv.style.display = "block";
+    currentSection = section + 1;
+    updateStepIndicator();
   }
+  // }
 }
 
 function prevSection(section) {
@@ -83,6 +95,11 @@ function prevSection(section) {
     updateStepIndicator();
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Photo Upload
+////////////////////////////////////////////////////////////////////////////////////////
+
 function uploadAndConvert() {
   const imageInput = document.getElementById("imageInput");
   const resultContainer = document.getElementById("resultContainer");
@@ -115,84 +132,134 @@ function uploadAndConvert() {
   }
 }
 
-document
-  .getElementById("memberForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    signInWithPhoneNumber()
-      .then(() => {
-        const formData = new FormData(document.getElementById("memberForm"));
+////////////////////////////////////////////////////////////////////////////////////////
+// Submit Form
+////////////////////////////////////////////////////////////////////////////////////////
 
-        // Convert FormData to JSON
-        const jsonData = {};
-        formData.forEach((value, key) => {
-          jsonData[key] = value;
-        });
-        jsonData["Latitude"] = Lat;
-        jsonData["Longitude"] = Lon;
-        jsonData["ImagePath"] = Imgstr;
-        console.log(jsonData);
-        showSuccessNotification();
-        setTimeout(() => {
-          document.getElementsByClassName("container")[0].style.display =
-            "none";
-          document.getElementsByClassName("container1")[0].style.display =
-            "block";
-          var textnode = document.createTextNode(
-            "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa"
-          );
-          var anchornode = document.createElement("a");
-          anchornode.appendChild(textnode);
-          anchornode.style.display = "flex";
-          anchornode.style.height = "inherit";
-          anchornode.style.justifyContent = "center";
-          anchornode.style.alignItems = "center";
-          anchornode.href = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
-          anchornode.title = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
-          document
-            .getElementsByClassName("container1")[0]
-            .appendChild(anchornode);
-        }, 3000);
+document.getElementById("sub-btn").addEventListener("click", function (event) {
+  event.preventDefault();
+  if (validateCurrentSection(3)) {
+    const formData = new FormData(document.getElementById("memberForm"));
 
-        // Make a POST request using Fetch API
-        fetch("http://localhost:3000/submitForm", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(jsonData),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log("Success:", data);
-            showSuccessNotification();
-            setTimeout(() => {}, 3000);
-            document.getElementsByClassName("container").style.display = "none";
-            document.getElementsByClassName("container1").style.display =
-              "block";
-            document.getElementById("recaptcha-container").style.display =
-              "none";
-            // Optionally, you can redirect or display a success message here
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            // Handle error, display an error message, etc.
-          });
-      })
-      .catch((error) => {
-        // Handle any errors during phone number verification
-        // ...
-        console.log("Error:", error);
+    // Convert FormData to JSON
+    const jsonData = {};
+    const radioButtons = document.getElementsByName("DirectSupport");
+    let selectedValue;
+    radioButtons.forEach((button) => {
+      if (button.checked) {
+        selectedValue = button.value;
+      }
+    });
+    const radioButtons1 = document.getElementsByName("IndirectSupport");
+    let selectedValue1;
+    radioButtons1.forEach((button) => {
+      if (button.checked) {
+        selectedValue1 = button.value;
+      }
+    });
+    jsonData["IndirectSupport"] = selectedValue1;
+    formData.forEach((value, key) => {
+      if (key !== "DirectSupport" || key !== "IndirectSupport") {
+        jsonData[key] = value;
+      }
+    });
+    jsonData["Latitude"] = Lat;
+    jsonData["Longitude"] = Lon;
+    jsonData["ImagePath"] = Imgstr;
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    jsonData["DOJ"] = formattedDate;
+    console.log(jsonData);
+    // showSuccessNotification();
+    setTimeout(() => {
+      document.getElementsByClassName("container")[0].style.display = "none";
+      document.getElementsByClassName("container2")[0].style.display = "none";
+      document.getElementsByClassName("container1")[0].style.display = "flex";
+      document.getElementsByClassName("container1")[0].style.justifyContent =
+        "center";
+      document.getElementsByClassName("container1")[0].style.alignItems =
+        "center";
+      var textnode = document.createTextNode(
+        "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa"
+      );
+      var cardContent = ` <div class="identity-card" id="identity-card">
+        <h2>Identity Card</h2>
+        <img id="photo" src="profile.jpg" alt="Photo" />
+        <p><strong>பெயர்:</strong> <span id="name">${jsonData["Name"]}</span></p>
+        <p><strong>பிறந்த தேதி:</strong> <span id="age">${jsonData["DOB"]}</span></p>
+        <p>
+          <strong>முகவரி:</strong>
+          <span id="address">${jsonData["Address"]}</span>
+        </p>
+        <p><strong>குருதி விவரம்:</strong> <span id="phone">${jsonData["BloodGroup"]}</span></p>
+      </div><br>`;
+      var anchornode = document.createElement("a");
+      anchornode.appendChild(textnode);
+      anchornode.style.display = "flex";
+      anchornode.style.height = "inherit";
+      anchornode.style.justifyContent = "center";
+      anchornode.style.alignItems = "center";
+      anchornode.href = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
+      anchornode.title = "https://chat.whatsapp.com/CsbrHpVK8jqEBBSsujWyLa";
+      document.getElementsByClassName("container1")[0].innerHTML = cardContent;
+      document.getElementsByClassName("container1")[0].appendChild(anchornode);
+      const identityCard = document.getElementById("identity-card");
+
+      // Use html2canvas to convert the identity card div to a canvas
+      html2canvas(identityCard, {
+        scale: 2, // Adjust scale if needed
+      }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("landscape");
+
+        // Add image to the PDF
+        pdf.addImage(imgData, "PNG", 10, 10, 280, 180); // Adjust dimensions as needed
+
+        // Download the PDF
+        pdf.save("identity_card.pdf");
       });
-  });
+    }, 3000);
+
+    // Make a POST request using Fetch API
+    // fetch("http://localhost:3000/submitForm", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(jsonData),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     console.log("Success:", data);
+    //     showSuccessNotification();
+    //     setTimeout(() => {}, 3000);
+    //     document.getElementsByClassName("container").style.display = "none";
+    //     document.getElementsByClassName("container1").style.display =
+    //       "block";
+    //     document.getElementById("recaptcha-container").style.display =
+    //       "none";
+    //     // Optionally, you can redirect or display a success message here
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //     // Handle error, display an error message, etc.
+    //   });
+  }
+});
 
 updateStepIndicator();
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Validation
+////////////////////////////////////////////////////////////////////////////////////////
 function validateCurrentSection(section) {
   const inputs = document.querySelectorAll(
     `.form-section[data-section="${section}"] input`
@@ -248,6 +315,24 @@ function validateCurrentSection(section) {
           return false;
         }
         break;
+      case "booth":
+        if (input.value.length > 10) {
+          alert("Booth Number should not exceed 10 characters.");
+          return false;
+        }
+        break;
+      case "boothaddress":
+        if (input.value.length > 10) {
+          alert("Booth Address should not exceed 500 characters.");
+          return false;
+        }
+        break;
+      case "refid":
+        if (input.value.length > 12) {
+          alert("Reference Voter ID should not exceed 12 characters.");
+          return false;
+        }
+        break;
       case "postOffice":
         if (input.value.length > 100) {
           alert("Post Office should not exceed 100 characters.");
@@ -296,12 +381,41 @@ function validateCurrentSection(section) {
   // All validations passed
   return true;
 }
+////////////////////////////////////////////////////////////////////////////////////////
+// Dom Content Loaded
+////////////////////////////////////////////////////////////////////////////////////////
 
-// Districts
-
+document.getElementById("sub-btn").disabled = true;
+document.getElementsByClassName("submitbtn")[0].style.backgroundColor = "grey";
 document.addEventListener("DOMContentLoaded", function () {
+  var container2 = document.getElementsByClassName("container2")[0];
   document.getElementsByClassName("container")[0].style.display = "block";
+  document.getElementsByClassName("container2")[0].style.display = "block";
   document.getElementsByClassName("container1")[0].style.display = "none";
+  container2.innerHTML = `<form action='#'>
+     <h3>Mobile Number</h3>
+     <h4>மொபைல் எண்</h4>
+     <p>You'll receive an OTP to confirm this number.</p>
+     <input
+       type='tel'
+       id='phone'
+       name='phone'
+       class='phone-input'
+       placeholder='Enter your phone number'
+       required
+     />
+     <br />
+     <br />
+     <button type='submit' class='submit-btn' id='next-btn-ph'>
+       Next
+     </button>
+   </form>`;
+  document
+    .getElementById("next-btn-ph")
+    .addEventListener("click", function (event) {
+      event.preventDefault();
+      signInWithPhoneNumber();
+    });
   var districtData;
   fetch("./districts.json")
     .then((response) => response.json())
@@ -318,3 +432,134 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // const phoneNumber = document.getElementById("whNumber").value;
+////////////////////////////////////////////////////////////////////////////////////////
+// Firebase Code
+////////////////////////////////////////////////////////////////////////////////////////
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAncEcCrnUyQurlkB8yFf0450vlw7-vE0g",
+  authDomain: "vmk-tvl.firebaseapp.com",
+  projectId: "vmk-tvl",
+  storageBucket: "vmk-tvl.appspot.com",
+  messagingSenderId: "235904375981",
+  appId: "1:235904375981:web:9267a36a3e19e1a4ec3a24",
+};
+const app = firebase.initializeApp(firebaseConfig);
+function signInWithPhoneNumber() {
+  return new Promise((resolve, reject) => {
+    var phoneNumber = "+91" + document.getElementById("phone").value;
+    var container2 = document.getElementsByClassName("container2")[0];
+    container2.innerHTML = `<h3>OTP Number</h3>
+      <h4>OTP எண்</h4>
+      <p>You'll receive an OTP to confirm this number.</p>
+      <input
+        type="number"
+        id="otp"
+        name="OTP"
+        class="phone-input"
+        placeholder="Enter your OTP code"
+        required /><br /><br />;
+      <button type="submit" class="submit-btn" id="otp-btn-ph">Submit</button>`;
+    // document.getElementsByClassName("container2")[0].style.display = "none";
+    // document.getElementsByClassName("container3")[0].style.display = "block";
+    var recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+      }
+    );
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+      .then((confirmationResult) => {
+        // SMS sent successfully
+        document
+          .getElementById("otp-btn-ph")
+          .addEventListener("click", function (event) {
+            event.preventDefault();
+            var code = document.getElementById("otp").value;
+            confirmationResult
+              .confirm(code)
+              .then((result) => {
+                // User signed in successfully
+                console.log("OTP verified", result.user);
+                document.getElementsByClassName("container2")[0].style.display =
+                  "none";
+                document.getElementsByClassName("container")[0].style.display =
+                  "block";
+                resolve();
+              })
+              .catch((error) => {
+                // Error occurred
+                console.error("Error signing in:", error);
+                reject(error);
+              });
+          });
+      })
+      .catch((error) => {
+        // Error occurred during signInWithPhoneNumber
+        console.error("Error signing in with phone number:", error);
+        reject(error); // Reject the promise
+      });
+  });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// RefId Check
+////////////////////////////////////////////////////////////////////////////////////////
+
+document.getElementById("ver-btn").addEventListener("click", function (event) {
+  event.preventDefault();
+  checkRefid();
+});
+
+function checkRefid() {
+  const url = "http://localhost:3000/check-refid"; // Assuming this is your server endpoint
+  refid = document.getElementById("refid").value;
+  // Create a data object with the refid
+  const data = { refid: refid };
+
+  // Configure the fetch request
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+
+  // Send the POST request
+  fetch(url, requestOptions)
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
+      } else {
+        throw new Error("Network response was not ok.");
+      }
+    })
+    .then((data) => {
+      console.log(data); // Handle the response data
+      if (data == "Verified!") {
+        document.getElementsByClassName("responsetext")[0].style.color =
+          "green";
+        document.getElementsByClassName("responsetext")[0].innerHTML = data;
+        document.getElementById("sub-btn").disabled = false;
+        document.getElementsByClassName("submitbtn")[0].style.backgroundColor =
+          "green"; 
+      } else {
+        document.getElementsByClassName("responsetext")[0].style.color = "red";
+        document.getElementsByClassName("responsetext")[0].innerHTML = data;
+        document.getElementsByClassName("submitbtn")[0].style.backgroundColor =
+          "grey";
+        document.getElementById("sub-btn").disabled = true;
+      }
+    })
+    .catch((error) => {
+      document.getElementsByClassName("submitbtn")[0].style.backgroundColor =
+        "grey";
+      document.getElementsByClassName("responsetext")[0].style.color = "red";
+      document.getElementsByClassName("responsetext")[0].innerHTML = "Error!";
+      console.error("Error occurred:", error);
+      document.getElementById("ver-btn").disabled = true;
+    });
+}

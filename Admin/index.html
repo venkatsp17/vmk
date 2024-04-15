@@ -5,14 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Data Table</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   </head>
   <body>
     <header class="header">
       <h1>உறுப்பினர் அட்டவணை</h1>
-      <button id="openMapBtn">வரைபடம்</button>
-      <button id="backButton" style="display: none">Back</button>
+      <div style="width: 20%; display: flex; justify-content: space-around">
+        <button id="openMapBtn">வரைபடம்</button>
+        <button id="analyticsbtn">பகுப்பாய்வு பக்கம்</button>
+        <button id="backButton" style="display: none">Back</button>
+      </div>
     </header>
+    <h1 id="tot-mem"></h1>
+    <div id="searchContainer">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search..."
+        oninput="searchData()" />
+      <select class="sel-search" id="search-term">
+        <option value="Name" selected>பெயர்</option>
+        <option value="WhNumber">வாட்ஸ்அப் எண்</option>
+        <option value="VoterId">வாக்காளர் அடையாள எண்</option>
+      </select>
+      <button onclick="clearSearch()">Clear</button>
+    </div>
+    <!-- <canvas id="districtChart"></canvas> -->
     <div id="tableContainer">
       <table id="dataTable">
         <thead>
@@ -21,9 +46,11 @@
             <th>பெயர்</th>
             <th>தந்தையின் பெயர்</th>
             <th>பிறந்த தேதி</th>
-            <th>வாட்ஸ்அப் எண்:</th>
-            <th>மாவட்டம்:</th>
-            <th>Action</th>
+            <th>வாட்ஸ்அப் எண்</th>
+            <th>மாவட்டம்</th>
+            <th>View</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -33,14 +60,173 @@
           <tr>
             <td colspan="7" id="pagination">
               <button id="prevPageBtn" onclick="prevPage()">
-                Previous Page
+                முந்தைய பக்கம்
               </button>
-              <span id="currentPage">Page 1</span>
-              <button id="nextPageBtn" onclick="nextPage()">Next Page</button>
+              <span id="currentPage">பக்கம் 1</span>
+              <button id="nextPageBtn" onclick="nextPage()">
+                அடுத்த பக்கம்
+              </button>
             </td>
           </tr>
         </tfoot>
       </table>
+    </div>
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">x</span>
+        <div style="display: flex">
+          <button onclick="showPage(1)" class="Pagebutton">Page 1</button>
+          <button onclick="showPage(2)" class="Pagebutton">Page 2</button>
+          <button onclick="showPage(3)" class="Pagebutton">Page 3</button>
+        </div>
+        <form id="editform">
+          <div id="page1" class="page active">
+            <h2>உறுப்பினர் அட்டவணை - Page 1</h2>
+            <label>பெயர்:</label>
+            <input type="text" id="nameInput" name="Name" disabled required />
+            <label>தந்தையின் பெயர்:</label>
+            <input
+              type="text"
+              id="fatherNameInput"
+              name="FatherName"
+              disabled
+              required />
+            <label>பிறந்த தேதி:</label>
+            <input type="date" id="dobInput" name="DOB" disabled required />
+            <label>வாட்ஸ்அப் எண்:</label>
+            <input
+              type="number"
+              id="WhnoInput"
+              name="WhNumber"
+              required
+              disabled />
+            <label>மாவட்டம்:</label>
+            <!-- <input type="text" id="DistrictInput" disabled /> -->
+            <select
+              id="DistrictInput"
+              name="District"
+              disabled
+              required></select>
+            <label>தொகுதி:</label>
+            <input type="text" id="DivisionInput" name="Division" disabled />
+            <label>வார்டு:</label>
+            <input type="text" id="WardInput" name="Ward" disabled />
+          </div>
+          <div id="page2" class="page">
+            <h2>உறுப்பினர் அட்டவணை - Page 2</h2>
+            <label>அஞ்சல் குறியிடு:</label>
+            <input type="text" id="PostInput" name="PostOffice" disabled />
+            <label>முகவரி:</label>
+            <!-- <input type="text" id="AddressInput" name="Address" disabled /> -->
+            <textarea
+              id="AddressInput"
+              name="Address"
+              rows="4"
+              required
+              disabled></textarea>
+            <label>பகுதி:</label>
+            <!-- <input type="text" id="AreaTypeInput" disabled /> -->
+            <select id="AreaTypeInput" name="AreaType" disabled>
+              <option value="Panchayat Union">ஊராச்சி ஒன்றியம்</option>
+              <option value="Municipality">பேரூராட்சி</option>
+              <option value="Corporation">மாநகராட்சி</option>
+              <option value="Civilization">நாகராட்சி</option>
+            </select>
+            <label>வாக்காளர் அடையாள எண்:</label>
+            <input type="text" id="VoterIdInput" name="VoterId" disabled />
+            <label>குருதி விவரம்:</label>
+            <input
+              type="text"
+              id="BloodGroupInput"
+              name="BloodGroup"
+              disabled />
+            <label>பரிந்துரைப்பவர் வாக்காளர் அடையாள எண்:</label>
+            <input type="text" id="RefIdInput" name="RefId" disabled />
+          </div>
+          <div id="page3" class="page">
+            <h2>உறுப்பினர் அட்டவணை - Page 3</h2>
+            <label>தேர்தல் சாவடி எண்::</label>
+            <input type="number" id="boothInput" name="BoothNumber" disabled />
+            <label>தேர்தல் சாவடி முகவரி:</label>
+            <input
+              type="text"
+              id="boothaddressInput"
+              name="BoothAddress"
+              disabled />
+            <label for="directSupport">நேரடி ஆதரவு:</label>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="directSupport1"
+                name="DirectSupport"
+                value="Public relations" />
+              <label for="directSupport1">மக்கள் தொடர்பு</label>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="directSupport2"
+                name="DirectSupport"
+                value="Field work" />
+              <label for="directSupport2">களப்பணி</label>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="directSupport3"
+                name="DirectSupport"
+                value="Financial management" />
+              <label for="directSupport3">நிதி மேலாண்மை</label>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="directSupport4"
+                name="DirectSupport"
+                value="Event management" />
+              <label for="directSupport4">நிகழ்ச்சி ஏற்பட்டு மேலாண்ம</label>
+            </div>
+            <label for="indirectSupport">மறைமுக ஆதரவு:</label>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="indirectSupport1"
+                name="IndirectSupport"
+                value="Banner/scroll design" />
+              <label for="indirectSupport1">பதாகை/சுருட்டி வடிவமைப்பு</label>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="indirectSupport2"
+                name="IndirectSupport"
+                value="Video creation" />
+              <label for="indirectSupport2">காணொளி உருவாக்குதல்</label>
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="indirectSupport3"
+                name="IndirectSupport"
+                value="Party propaganda on social media" />
+              <label for="indirectSupport3"
+                >சமூக வலைதளத்தில் கட்சிப் பரப்புர</label
+              >
+            </div>
+            <div style="display: flex; align-items: center; margin: 0">
+              <input
+                type="radio"
+                id="indirectSupport4"
+                name="IndirectSupport"
+                value="Content writing" />
+              <label for="indirectSupport4">உள்ளடக்கம் எழுதுதல்</label>
+            </div>
+          </div>
+        </form>
+        <div class="pagination">
+          <button onclick="editItem()">Save Changes</button>
+        </div>
+      </div>
     </div>
     <div id="map" style="display: none"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>

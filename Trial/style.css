@@ -23,8 +23,17 @@ body {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   width: 60%;
-  height: 300px;
+  height: 350px;
+  flex-direction: column;
   overflow: hidden;
+}
+
+.verify-btn {
+  background-color: orange !important;
+  width: 30% !important;
+  padding: 8px !important;
+  margin: 0 !important;
+  font-size: medium !important;
 }
 
 .member-form {
@@ -54,6 +63,12 @@ body {
   border: 1px solid #ddd;
   border-radius: 6px;
   box-sizing: border-box;
+}
+
+.member-form input[type="radio"] {
+  padding: 0px;
+  margin: 0px;
+  width: 20px;
 }
 
 .member-form textarea {
@@ -159,4 +174,139 @@ body {
 .message {
   display: block;
   font-size: 16px;
+}
+
+.container2 {
+  background-color: #fff;
+  padding: 5vw;
+  width: 30%;
+  min-height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .container3 {
+  background-color: #fff;
+  padding: 40px;
+  width: 30%;
+  min-height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.phone-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.phone-input:focus {
+  border-color: #007bff;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+} */
+
+.container3 {
+  background-color: #fff;
+  padding: 5vw;
+  width: 30%;
+  min-height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.phone-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.phone-input:focus {
+  border-color: #007bff;
+}
+
+.submit-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Media Query for Mobile Screens */
+@media (max-width: 767px) {
+  .container3 {
+    width: 80%; /* Adjusted width for better fit on smaller screens */
+  }
+  .container2 {
+    width: 80%; /* Adjusted width for better fit on smaller screens */
+  }
+
+  .phone-input,
+  .submit-btn {
+    font-size: 14px; /* Adjusted font size for better readability on smaller screens */
+    padding: 8px; /* Adjusted padding for better fit on smaller screens */
+  }
+}
+
+/* ID CARD CSS */
+
+.identity-card {
+  width: 300px;
+  padding: 20px;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
+.identity-card h2 {
+  margin: 0;
+  text-align: center;
+}
+.identity-card img {
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+.identity-card p {
+  margin: 5px 0;
 }

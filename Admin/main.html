@@ -3,47 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Table</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Chart</title>
+    <link rel="stylesheet" href="main.css" />
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <header class="header">
-      <h1>உறுப்பினர் அட்டவணை</h1>
-      <button id="openMapBtn">வரைபடம்</button>
-      <button id="backButton" style="display: none">Back</button>
-    </header>
-    <div id="tableContainer">
-      <table id="dataTable">
-        <thead>
-          <tr>
-            <th>அடையாள எண்</th>
-            <th>பெயர்</th>
-            <th>தந்தையின் பெயர்</th>
-            <th>பிறந்த தேதி</th>
-            <th>வாட்ஸ்அப் எண்:</th>
-            <th>மாவட்டம்:</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Table data will be inserted here dynamically -->
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="7" id="pagination">
-              <button id="prevPageBtn" onclick="prevPage()">
-                Previous Page
-              </button>
-              <span id="currentPage">Page 1</span>
-              <button id="nextPageBtn" onclick="nextPage()">Next Page</button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+    <div class="tabbar">
+      <h2>விளக்கப்படம்</h2>
+      <button class="button button2" id="chart-enable-btn">
+        மாவட்ட வாரியாக எண்ணிக்கை
+      </button>
+      <button class="button button2" id="chart-enable-btn1">
+        வயது வாரியாக விளக்கப்படம்
+      </button>
+      <hr
+        style="
+          height: 2px;
+          border-width: 0;
+          color: gray;
+          width: 100%;
+          background-color: gray;
+        " />
+         <h2>மாவட்டம்</h2>
+      <!-- <label style="font-weight: bold">மாவட்டம்:</label> -->
+      <select class="sel-search" id="DistrictInput"></select>
+      <button class="button button2 co" id="downloadpdf">
+        Pdf ஐ பதிவிறக்கவும்
+      </button>
     </div>
-    <div id="map" style="display: none"></div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <div class="mainbar">
+      <center>
+        <div id="chartContainer" style="width: 700px; height: 700px"></div>
+        <canvas id="districtChart"></canvas>
+      </center>
+    </div>
+    <script src="script1.js"></script>
   </body>
 </html>
